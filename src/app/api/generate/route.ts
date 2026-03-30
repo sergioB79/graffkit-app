@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { buildPrompt, PromptConfig } from "../../lib/buildPrompt";
+import { buildPrompt, PromptConfig } from "../../../lib/buildPrompt";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
     const image = result.data[0]?.url ?? null;
     return NextResponse.json({ image });
-  } catch {
+  } catch (error) {
     console.error(error);
     return NextResponse.json({ error: (error as Error).message ?? "Image generation failed" }, { status: 500 });
   }

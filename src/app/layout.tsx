@@ -3,6 +3,7 @@ import { Bebas_Neue, Space_Mono } from "next/font/google";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
+  weight: "400",
   subsets: ["latin"],
   variable: "--font-display",
 });
