@@ -1,0 +1,186 @@
+um produto com potencial (rápido de usar, altamente visual, shareable). Vou dar-te um blueprint completo + estrutura pronta a implementar (Vercel-friendly).
+
+🧠 🧱 CONCEITO — Graffiti Maker App
+
+Uma app onde:
+
+User escreve texto (ex: “Mateus”)
+Escolhe estilo + cores + complexidade
+Backend gera automaticamente um prompt estruturado
+Envia para API de imagem (OpenAI / SDXL / etc)
+Recebe imagem final (download + share)
+
+👉 Ideia-chave:
+User não escreve prompt → UI traduz intenções → gera prompt perfeito
+
+🎛️ 🎨 UI — OPÇÕES IMPORTANTES (graffiti-specific)
+1. 📝 Texto
+Input: "Mateus"
+Toggle:
+ALL CAPS
+Tag style (mais ilegível)
+Clean readable
+2. 🎭 Estilo (core)
+
+Dropdown / cards:
+
+Wildstyle (complexo, arrows)
+Bubble (round, cartoon)
+Throw-up (rápido, simples)
+Block letters (mais sólido)
+Calligraphy graffiti
+3D graffiti
+Stencil
+Street raw (com sujidade)
+3. 🎨 Paleta de cores
+
+Preset + custom:
+
+Neon (rosa/ciano/roxo)
+Classic (vermelho/amarelo)
+Ocean (azul/verde)
+Fire (laranja/vermelho)
+Pastel (soft)
+Dark mode (preto + glow)
+
+👉 + color picker manual (opcional)
+
+4. 🔥 Complexidade
+
+Slider:
+
+1 → simples (logo-like)
+5 → wildstyle médio
+10 → caos total (pro graffiti)
+5. ✏️ Tipo de linha
+Smooth clean
+Rough spray
+Drips heavy
+Sketch style
+6. 🧱 Background
+Brick wall
+Concrete wall
+Train
+Black studio (logo mode)
+Transparent (PNG)
+7. 💡 Extras (checkbox)
+Drips
+Glow
+Shadows
+3D depth
+Paint splatter
+Outline heavy
+⚙️ LÓGICA — GERADOR DE PROMPT
+
+Aqui está o coração do sistema 👇
+
+function buildPrompt(config) {
+  return `
+Graffiti street art with the word "${config.text}",
+${config.style} lettering,
+complexity level ${config.complexity}/10,
+${config.lineStyle} lines,
+color palette: ${config.colors},
+features: ${config.features.join(", ")},
+strong outline, urban spray paint texture,
+${config.background} background,
+high detail, professional graffiti, centered composition
+  `;
+}
+🚀 ARQUITETURA (SIMPLES E EFICAZ)
+Frontend (Next.js / Vercel)
+Form UI (React)
+Preview config
+Botão: Generate
+Backend (API route)
+Recebe config
+Gera prompt
+Chama API imagem
+Retorna URL/base64
+🧪 EXEMPLO API (OpenAI Images)
+// /api/generate.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+export default async function handler(req, res) {
+  const { config } = req.body;
+
+  const prompt = buildPrompt(config);
+
+  try {
+    const result = await client.images.generate({
+      model: "gpt-image-1",
+      prompt,
+      size: "1024x1024"
+    });
+
+    res.status(200).json({
+      image: result.data[0].url
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+🖥️ FRONTEND (SIMPLIFICADO)
+async function generateGraffiti(config) {
+  const res = await fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ config })
+  });
+
+  const data = await res.json();
+  return data.image;
+}
+🎯 UX FLOW
+User escreve: Mateus
+Escolhe:
+Wildstyle
+Neon
+Complexidade 7
+Brick wall
+Clica Generate
+Loader (2–5s)
+Resultado:
+Download
+Regenerate
+Save (opcional)
+💰 IDEIAS DE MONETIZAÇÃO
+5 imagens grátis/dia
+Pack premium:
+HD export
+Transparent PNG
+Batch generation
+“Pro graffiti pack” (estilos mais avançados)
+NFT / prints (opcional)
+🔥 FEATURES AVANÇADAS (FASE 2)
+✏️ Editar imagem (inpainting)
+🧠 “Remix style” (upload referência)
+📱 Mobile-first app
+🎮 Versão kids (Minecraft graffiti mode 👀)
+🧾 Histórico de criações
+🔗 Share direto (IG / TikTok)
+🧠 DIFERENCIAÇÃO (IMPORTANTE)
+
+A maioria faz isto mal porque:
+❌ deixa o user escrever prompt
+❌ resultados inconsistentes
+
+👉 Tu fazes melhor:
+
+UI → traduz intenção → prompt perfeito
+Consistência visual
+Identidade forte (graffiti niche)
+⚡ EXTRA — PROMPT “TOP TIER” (interno)
+Graffiti mural with the word "Mateus", dynamic wildstyle lettering with controlled readability, thick white outline, vibrant neon gradient fill, layered shadows for depth, sharp arrows and extensions, paint splashes and subtle drips, realistic spray paint texture, high contrast, urban street aesthetic, centered composition on a detailed brick wall, professional high-resolution graffiti artwork
+
+Se quiseres, posso agora:
+👉 desenhar o UI completo estilo Figma (layout + UX)
+👉 ou gerar um starter project pronto (Next.js + Tailwind + API)
+👉 ou ainda transformar isto numa micro-SaaS com login + pagamentos
+
+Diz-me o próximo passo 👀
