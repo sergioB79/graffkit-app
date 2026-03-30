@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       size: "1024x1024",
     });
 
-    const image = result.data[0]?.url ?? null;
+    const image = result.data?.[0]?.url ?? null;
     return NextResponse.json({ image });
   } catch (error) {
     console.error(error);
